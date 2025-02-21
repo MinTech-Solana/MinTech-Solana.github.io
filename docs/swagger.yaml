@@ -278,13 +278,41 @@ paths:
           description: Instantly dump tokens on Raydium.
       responses:
         '200':
-          description: Broadcast status
+          description: Action completed successfully.
           content:
             application/json:
               schema:
                 type: object
-                example:
-                  key: success
+                properties:
+                  applied_config:
+                    type: object
+                    properties:
+                      action:
+                        type: string
+                        example: "edit"
+                      groupName:
+                        type: string
+                        example: "QT"
+                  error:
+                    type: boolean
+                    example: false
+                  group:
+                    type: integer
+                    example: 2
+                  message:
+                    type: string
+                    example: "Action completed successfully"
+              examples:
+                successExample:
+                  summary: Successful Response
+                  value:
+                    applied_config:
+                      action: "edit"
+                      groupName: "QT"
+                      sellPerc: 10
+                    error: false
+                    group: 2
+                    message: "Action completed successfully"
       security:
         - ApiKeyAuth: []
 components:
