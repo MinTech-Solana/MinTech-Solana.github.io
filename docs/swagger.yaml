@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: MinTech SOL QT
+  description: MinTechSOL Extended QT documentation
+  version: 0.0.1
+servers:
+  - url: http://127.0.0.1:29373/aqt
+    description: Localhost (Same Machine) 
+  - url: https://solana.mintechbots.com/aqt
+    description: Remote (Extension and/or logged session)
+
+tags:
+  - name: PumpFun
+
+paths:
+  /:
+    get:
+      summary: QT endpoint
+      description: | 
+        Executes instant quicktask
+        <br>**Examples**:
+        - `/aqt?input=XXX&amount_buy=0.0001` Buy a token with specific amount
+        - `/aqt?input=XXX&amount_buy=0.0001&tickerWhitelist=hello&mode=afk`<br>Buy a token with specified amount and tickerWhitelist and mode (afk)
+        - `/aqt?amount_buy=0.0001&groupName=test&action=edit` Edit tasks in group test with specific amount
+        - `/aqt?groupName=test&action=start` Start tasks in taskgroup test
+        - `/aqt?groupName=test&action=stop` Stop tasks in taskgroup test
+        - `/aqt?groupName=test&action=edit&mode=sell&sellPerc=10&groupName=test` Sell 10% of tokens held in task group test
+        - `/aqt?input=XXX&mode=sell&sellPerc=10` run 10% sell mode on token XXX
+        - `/aqt?input=XXXwalletGroup=XYZ` Buy a token with specific walletGroup
+      tags: ["PumpFun"]
+      parameters:
+        - in: query
+          name: input
+          schema:
+            type: string
+          required: true
+          description: Token Address.
+        - in: query
+          name: action
+          schema:
+            type: string
+            enum: ["edit", "start", "stop"]
+          required: false
+          description: |
+            Action to execute for the QT request:
+            - `edit`: Change the selected `groupName` with supplied values.
+            - `start`: Edit & start the tasks of the selected `groupName`.
+            - `stop`: Terminate running tasks of the selected `groupName`.
+            - If no action is specified, QT will create a task with given input + values.
+        - in: query
+          name: groupName
+          schema:
+            type: string
+          required: false
+          description: Existing Task Group name. If not supplied, QT will create a new one if the token wasn't previously QTed; otherwise, it will use the same group as the previous QT.
+        - in: query
+          name: amount_buy
+          schema:
+            type: number
+          required: false
+          description: Amount Buy (SOL)
+        - in: query
+          name: walletGroup
+          schema:
+            type: string
+          required: false
+          description: Wallet Group Name
+        - in: query
+          name: mode
+          schema:
+            type: string
+            enum: ["afk", "pinklock", "curve", "sell"]
+          required: false
+          description: The operational mode of the task.
+        - in: query
+          name: slippage
+          schema:
+            type: number
+          required: false
+          description: Slippage tolerance percentage.
+        - in: query
+          name: sellPerc
+          schema:
+            type: number
+          required: false
+          description: Slippage tolerance percentage.
+        - in: query
+          name: useMinTokensOut
+          schema:
+            type: boolean
+          required: false
+          description: Toggle between slippage % or min tokens out.
+        - in: query
+          name: maxConcurrentBuys
+          schema:
+            type: number
+          required: false
+          description: Maximum number of simultaneous buy tasks.
+        - in: query
+          name: feePerTx
+          schema:
+            type: number
+          required: false
+          description: Transaction fee per transaction (SOL).
+        - in: query
+          name: txDelay
+          schema:
+            type: number
+          required: false
+          description: Delay between transactions (ms).
+        - in: query
+          name: maxTxs
+          schema:
+            type: number
+          required: false
+          description: Maximum number of transactions (0 for unlimited).
+        - in: query
+          name: txCu
+          schema:
+            type: number
+          required: false
+          description: Compute units per transaction.
+        - in: query
+          name: retries
+          schema:
+            type: number
+          required: false
+          description: Number of retries per transaction.
+        - in: query
+          name: sellFeePerTx
+          schema:
+            type: number
+          required: false
+          description: Transaction fee per sell transaction (SOL).
+        - in: query
+          name: sellTxDelay
+          schema:
+            type: number
+          required: false
+          description: Delay between sell transactions (ms).
+        - in: query
+          name: sellMaxTxs
+          schema:
+            type: number
+          required: false
+          description: Maximum number of sell transactions.
+        - in: query
+          name: sellTxCu
+          schema:
+            type: number
+          required: false
+          description: Compute units for sell transactions.
+        - in: query
+          name: sellRetries
+          schema:
+            type: number
+          required: false
+          description: Number of retries per sell transaction.
+        - in: query
+          name: sellIfDevSells
+          schema:
+            type: boolean
+          required: false
+          description: Sell if the developer sells.
+        - in: query
+          name: tpBondingCurve
+          schema:
+            type: number
+          required: false
+          description: Percentage bonding curve threshold for take-profit.
+        - in: query
+          name: tpSellPercentage
+          schema:
+            type: number
+          required: false
+          description: Percentage of holdings to sell when take-profit is triggered.
+        - in: query
+          name: maxSessionLoss
+          schema:
+            type: number
+          required: false
+          description: Maximum total loss before stopping this task (SOL).
+        - in: query
+          name: globalLossThreshold
+          schema:
+            type: number
+          required: false
+          description: Maximum consecutive losses before stopping this task.
+        - in: query
+          name: minDevPerc
+          schema:
+            type: number
+          required: false
+          description: Minimum developer buy percentage required.
+        - in: query
+          name: maxDevPerc
+          schema:
+            type: number
+          required: false
+          description: Maximum developer buy percentage allowed.
+        - in: query
+          name: minDevBal
+          schema:
+            type: number
+          required: false
+          description: Minimum SOL balance the developer must have.
+        - in: query
+          name: maxDevBal
+          schema:
+            type: number
+          required: false
+          description: Maximum SOL balance the developer can have.
+        - in: query
+          name: maxCoinDeploys
+          schema:
+            type: number
+          required: false
+          description: Maximum number of coins a deployer has launched.
+        - in: query
+          name: websiteBlacklist
+          schema:
+            type: boolean
+          required: false
+          description: Enable website blacklist filtering.
+        - in: query
+          name: wordBlacklist
+          schema:
+            type: string
+          required: false
+          description: List of blacklisted words (comma-separated).
+        - in: query
+          name: wordWhitelist
+          schema:
+            type: string
+          required: false
+          description: List of whitelisted words (comma-separated).
+        - in: query
+          name: tickerWhitelist
+          schema:
+            type: string
+          required: false
+          description: List of whitelisted tickers.
+        - in: query
+          name: tickerBlacklist
+          schema:
+            type: string
+          required: false
+          description: List of blacklisted tickers.
+        - in: query
+          name: pumpItProWL
+          schema:
+            type: boolean
+          required: false
+          description: Use PumpItPro whitelist.
+        - in: query
+          name: pumpItProBL
+          schema:
+            type: boolean
+          required: false
+          description: Use PumpItPro blacklist.
+        - in: query
+          name: pumpItKey
+          schema:
+            type: string
+          required: false
+          description: API Key for PumpItPro.
+        - in: query
+          name: useSellStratRaydium
+          schema:
+            type: boolean
+          required: false
+          description: Use sell strategy on Raydium.
+        - in: query
+          name: instantDumpRaydium
+          schema:
+            type: boolean
+          required: false
+          description: Instantly dump tokens on Raydium.
+      responses:
+        '200':
+          description: Broadcast status
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  key: success
+      security:
+        - ApiKeyAuth: []
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key for authentication.
