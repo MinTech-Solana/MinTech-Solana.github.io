@@ -83,7 +83,7 @@ paths:
           schema:
             type: number
           required: false
-          description: Slippage tolerance percentage.
+          description: Sell % of token holdings.
         - in: query
           name: useMinTokensOut
           schema:
